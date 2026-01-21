@@ -1,6 +1,6 @@
 # 🚀 Real-Time Device Monitoring Backend
 
-A FastAPI-based backend system for real-time device connection monitoring using **WebSockets** and **PostgreSQL**.
+A FastAPI-based backend system for real-time device connection monitoring using **WebSockets** and **SQLite**.
 This backend receives device connect/disconnect events, stores them in the database, and broadcasts live updates to frontend clients (React).
 
 ---
@@ -11,7 +11,7 @@ This backend receives device connect/disconnect events, stores them in the datab
 * ✅ WebSocket communication
 * ✅ Device connect / disconnect detection
 * ✅ Real-time event broadcasting
-* ✅ PostgreSQL database integration
+* ✅ SQLite database integration
 * ✅ Clean project structure
 * ✅ Ready for React frontend
 
@@ -26,7 +26,7 @@ Device Service
      ▼
 FastAPI Backend
      │
-     ├── PostgreSQL (event storage)
+     ├── SQLite (event storage)
      │
      │  WebSocket
      ▼
@@ -70,7 +70,7 @@ backend/
 
 * **Backend:** FastAPI
 * **WebSocket:** Starlette WebSocket
-* **Database:** PostgreSQL
+* **Database:** SQLite
 * **ORM:** SQLAlchemy
 * **Frontend:** React (WebSocket client)
 * **Language:** Python 3.11 / 3.12
@@ -80,7 +80,7 @@ backend/
 ## 📦 Requirements
 
 * Python 3.11+
-* PostgreSQL
+* SQLite
 * pip
 * Virtual environment (recommended)
 
@@ -131,9 +131,7 @@ pip install -r requirements.txt
 
 Create `.env` file:
 
-```env
-DATABASE_URL=postgresql://postgres:password@localhost:5432/devices_db
-```
+
 
 ---
 
@@ -217,40 +215,4 @@ ws.onmessage = (event) => {
 
 ---
 
-## 🔒 Future Improvements
 
-* JWT authentication
-* Device heartbeat system
-* Offline detection
-* Redis pub/sub
-* Docker & Docker Compose
-* Admin dashboard
-* Event analytics
-
----
-
-## 🎓 Academic Project Title
-
-> **Real-Time Device Monitoring System Using FastAPI, WebSockets, and PostgreSQL**
-
-Suitable for:
-
-* University final year project
-* Network monitoring research
-* Distributed systems study
-
----
-
-## 👨‍💻 Author
-
-**Ravindu**
-Computer Science Undergraduate
-University of Jaffna
-
----
-
-## ⭐ Notes
-
-* Always use virtual environment
-* Never commit `.env` file
-* Use WebSockets for real-time commun
