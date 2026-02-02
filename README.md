@@ -189,15 +189,16 @@ Receives real-time device events.
 Open browser console:
 
 ```javascript
-const ws = new WebSocket("ws://localhost:8000/ws");
+const ws = new WebSocket("ws://localhost:8000/ws/frontend");
 
 ws.onopen = () => {
-  ws.send("device connected");
+  console.log("Connected to backend");
 };
 
 ws.onmessage = (event) => {
-  console.log(event.data);
+  console.log("Live event:", event.data);
 };
+
 ```
 
 ---
