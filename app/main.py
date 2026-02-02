@@ -17,7 +17,15 @@ def get_device_events(db: Session = Depends(get_db)):
 
 @app.websocket("/ws/device")
 async def ws_device(websocket: WebSocket):
-    await device_websocket(websocket)
+    await websocket.accept()
+    try:
+        while True:
+            data = await websocket.receive_text()
+            print("[DEVICE EVENT]", data)
+    except:
+        print("[DEVICE DISCONNECTED]")
+
+
 
 @app.websocket("/ws/frontend")
 async def ws_frontend(websocket: WebSocket):
