@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, DateTime, BigInteger, String, ForeignKey, Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, BigInteger, DateTime
 from app.core.database import Base
 
 class NetworkMetric(Base):
@@ -11,35 +10,21 @@ class NetworkMetric(Base):
     total_devices = Column(Integer)
     active_devices = Column(Integer)
 
-    data_sent = Column(BigInteger)  # bytes
-    data_received = Column(BigInteger)  # bytes
-
-    arp_requests = Column(Integer)
-    tcp_packets = Column(Integer)
-    udp_packets = Column(Integer)
-    icmp_packets = Column(Integer)
+    data_sent = Column(BigInteger)        # bytes
+    data_received = Column(BigInteger)    # bytes
 
     total_packets = Column(Integer)
+    total_broadcast_packets = Column(Integer, default=0)
+    total_unicast_packets = Column(Integer, default=0)
+    ip_packets = Column(Integer, default=0)
+    tcp_packets = Column(Integer, default=0)
+    udp_packets = Column(Integer, default=0)
+    icmp_packets = Column(Integer, default=0)
 
+    arp_requests = Column(Integer, default=0)
+    arp_replies = Column(Integer, default=0)
 
-class DeviceMetric(Base):
-    __tablename__ = "device_metrics"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    device_id = Column(String, ForeignKey("devices.device_id"))
-    measure_time = Column(DateTime)
-    
-    # Topology data fields
-    data_sent = Column(BigInteger, default=0)
-    data_received = Column(BigInteger, default=0)
-    packet_count = Column(Integer, default=0)
-    status = Column(String)           # 'active', 'idle', etc.
-    online = Column(Boolean, default=True)
-    active = Column(Boolean, default=True)
-    hostname = Column(String, nullable=True)
-    ip_address = Column(String, nullable=True)
-    device_type = Column(String, nullable=True)
-    vendor = Column(String, nullable=True)
-    os = Column(String, nullable=True)
-    
-    device = relationship("Device")
+    dns_queries = Column(Integer, default=0)
+    dhcp_packets = Column(Integer, default=0)
+    http_requests = Column(Integer, default=0)
+    tls_handshakes = Column(Integer, default=0)

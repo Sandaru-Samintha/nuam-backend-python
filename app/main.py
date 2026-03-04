@@ -10,6 +10,7 @@ from app.services.event_processor import EventProcessor
 from datetime import datetime
 from app.api import analytics
 from app.api import topology_router
+from app.api.topology_router import build_topology_response
 
 app = FastAPI(title="Network Device Monitoring")
 
@@ -34,12 +35,26 @@ async def device_ws(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_json()
+            
+            print("Data Received : " , data)
 
             # Save event to DB
             processor.process_event(data)
 
             # Calculate dashboard stats
             stats = processor.get_dashboard_stats()
+            
+            if data["type"] == "TOPOLOGY" and "topology" in data["payload"]:
+                topology_data = build_topology_response(data["payload"]["topology"])
+
+                enriched_data = {
+                    "event": data,
+                    "dashboard_stats": processor.get_dashboard_stats(),
+                    "topology": topology_data
+                }
+                
+
+                await manager.broadcast(enriched_data)           
 
             # Attach stats to outgoing message
             enriched_data = {

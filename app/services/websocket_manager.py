@@ -14,7 +14,7 @@ class WebSocketManager:
         self.active_connections.remove(websocket)
 
     async def broadcast(self, message: dict):
-        print("Broadcasting message to frontend clients:", message)
+        # print("Broadcasting message to frontend clients:", message)
 
         disconnected_connections = []
 

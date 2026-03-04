@@ -4,7 +4,7 @@ from sqlalchemy import func
 
 from app.models.device import Device
 from app.models.device_event import DeviceEvent
-from app.models.network_metrics import DeviceMetric, NetworkMetric
+from app.models.network_metrics import NetworkMetric
 
 class AnalyticsService:
     
@@ -12,7 +12,6 @@ class AnalyticsService:
         self.db = db
     
     def get_dashboard_stats(self):
-        """Dashboard stats එක ගන්න"""
         today = datetime.utcnow().date()
 
         new_devices_today = self.db.query(Device).filter(func.date(Device.first_seen) == today).count()
@@ -28,7 +27,6 @@ class AnalyticsService:
         }
     
     def get_traffic_summary(self):
-        """Traffic summary - last 1 hour aggregated"""
 
         last_hour = datetime.utcnow() - timedelta(hours=1)
 
@@ -66,7 +64,6 @@ class AnalyticsService:
         }
     
     def get_device_connections_today(self):
-        """අද connect වුණ devices ගණන"""
         today = datetime.utcnow().date()
         
         connections = self.db.query(DeviceEvent).filter(
@@ -109,7 +106,6 @@ class AnalyticsService:
         }
     
     def get_all_devices(self):
-        """සියලුම devices ගැන විස්තර"""
         devices = self.db.query(Device).all()
         device_list = []
         
@@ -134,7 +130,6 @@ class AnalyticsService:
         return device_list
     
     def get_network_health(self):
-        """Network health score එක"""
         last_10_min = datetime.utcnow() - timedelta(minutes=10)
         
         metrics = self.db.query(NetworkMetric).filter(
@@ -177,7 +172,6 @@ class AnalyticsService:
         }
     
     def get_complete_analytics(self):
-        """සියලුම analytics data එකම function එකෙන් ගන්න"""
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "dashboard_stats": self.get_dashboard_stats(),
@@ -187,26 +181,3 @@ class AnalyticsService:
             "devices": self.get_all_devices(),
             "network_health": self.get_network_health()
         }
-        
-        
-    def get_top_bandwidth_devices(self, limit=5):
-        last_hour = datetime.utcnow() - timedelta(hours=1)
-
-        result = self.db.query(
-            DeviceMetric.device_id,
-            func.sum(DeviceMetric.data_sent + DeviceMetric.data_received).label("total_traffic")
-        ).filter(
-            DeviceMetric.measure_time >= last_hour
-        ).group_by(
-            DeviceMetric.device_id
-        ).order_by(
-            func.sum(DeviceMetric.data_sent + DeviceMetric.data_received).desc()
-        ).limit(limit).all()
-
-        return [
-            {
-                "device_id": row[0],
-                "total_traffic_mb": round(row[1] / (1024 * 1024), 2)
-            }
-            for row in result
-        ]
