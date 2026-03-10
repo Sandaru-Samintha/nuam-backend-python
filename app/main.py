@@ -1,4 +1,5 @@
 from fastapi import FastAPI, WebSocket, Depends, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import SessionLocal
 from app.api.frontend_ws import frontend_ws
 from app.core.database import engine, get_db
@@ -10,15 +11,26 @@ from app.services.event_processor import EventProcessor
 from datetime import datetime
 from app.api import analytics
 from app.api import topology_router
+from app.api import reports
 from app.api.topology_router import build_topology_response
 
 app = FastAPI(title="Network Device Monitoring")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 Base.metadata.create_all(bind=engine)
 
 app.include_router(analytics.router)
 
 app.include_router(topology_router.router)
+
+app.include_router(reports.router)
 
 @app.get("/device-events")
 def get_device_events(db: Session = Depends(get_db)):
