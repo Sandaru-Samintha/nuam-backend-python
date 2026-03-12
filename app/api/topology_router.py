@@ -61,7 +61,8 @@ def build_topology_response(topology):
             "activityPercent": round(activity_percent, 2),
             "data_sent": d.get("data_sent", 0),
             "data_received": d.get("data_received", 0),
-            "packet_count": packet_count
+            "packet_count": packet_count,
+            "total_packets":total_packets
         })
         
 
