@@ -10,6 +10,7 @@ from app.services.event_processor import EventProcessor
 from datetime import datetime
 from app.api import analytics
 from app.api import topology_router
+from app.api import network_activity
 from app.api.topology_router import build_topology_response
 
 app = FastAPI(title="Network Device Monitoring")
@@ -19,6 +20,8 @@ Base.metadata.create_all(bind=engine)
 app.include_router(analytics.router)
 
 app.include_router(topology_router.router)
+
+app.include_router(network_activity.router)
 
 @app.get("/device-events")
 def get_device_events(db: Session = Depends(get_db)):
