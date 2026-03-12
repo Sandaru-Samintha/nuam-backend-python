@@ -11,6 +11,7 @@ from app.services.event_processor import EventProcessor
 from datetime import datetime
 from app.api import analytics
 from app.api import topology_router
+from app.api import network_activity
 from app.api import reports
 from app.api.topology_router import build_topology_response
 
@@ -30,6 +31,7 @@ app.include_router(analytics.router)
 
 app.include_router(topology_router.router)
 
+app.include_router(network_activity.router)
 app.include_router(reports.router)
 
 @app.get("/device-events")
