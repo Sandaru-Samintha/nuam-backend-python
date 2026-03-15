@@ -55,6 +55,7 @@ def build_topology_response(topology):
             "type": d.get("device_type"),
             "status": d.get("status"),
             "online": d.get("online"),
+            "os": d.get("os"),
             "firstSeen": d.get("first_seen"),
             "lastSeen": d.get("last_seen"),
             "activityLevel": activity_level,

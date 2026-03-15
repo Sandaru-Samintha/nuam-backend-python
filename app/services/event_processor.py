@@ -22,6 +22,8 @@ class EventProcessor:
                 self.handle_device_joined(payload)
             elif subtype == "DEVICE_IDLE":
                 self.handle_device_idle(payload)
+            elif subtype == "DEVICE_LEFT":
+                self.handle_device_left(payload)
             elif subtype == "PERIODIC_METRIC_STATE":
                 self.handle_metric(payload)
             elif subtype == "PERIODIC_TOPOLOGY_STATE":
@@ -63,6 +65,25 @@ class EventProcessor:
         event = DeviceEvent(
             device_id=mac,
             event_type="DEVICE_JOINED",
+            timestamp=timestamp,
+            raw_json=json.dumps(payload)
+        )
+        self.db.add(event)
+        
+    def handle_device_left(self, payload):
+        device_data = payload["device"]
+        mac = device_data["device_id"]
+        timestamp = datetime.fromisoformat(payload["timestamp"].replace("Z", "+00:00"))
+
+        device = self.db.query(Device).filter_by(device_id=mac).first()
+        if device:
+            device.status = "left"
+            device.online = False
+            device.last_seen = timestamp
+
+        event = DeviceEvent(
+            device_id=mac,
+            event_type="DEVICE_LEFT",
             timestamp=timestamp,
             raw_json=json.dumps(payload)
         )
