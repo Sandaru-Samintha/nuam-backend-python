@@ -1,5 +1,6 @@
 from typing import Dict, List
 import uuid
+from app.services.network_state import network_state
 
 
 # Map device types
@@ -16,26 +17,22 @@ def map_device_type(db_type: str | None) -> str:
 
 
 # Network Stats Builder
-def build_network_stats(metrics_data: Dict, topology: Dict):
-
+def build_network_stats(metrics_data: dict, topology: dict):
     devices = topology.get("devices", [])
-
-    total_ips = 254
     in_use = len(devices)
-    available = total_ips - in_use
+    available = max(network_state.total_ips - in_use, 0)
 
     conflicts = sum(1 for d in devices if d.get("status") == "conflict")
     unauthorized = sum(1 for d in devices if d.get("status") == "unauthorized")
 
     return {
-        "totalIPs": total_ips,
+        "totalIPs": network_state.total_ips,
         "inUse": in_use,
         "available": available,
         "conflicts": conflicts,
         "unauthorized": unauthorized,
-        "poolRange": "10.0.0.1 - 10.0.0.254"
+        "poolRange": network_state.pool_range
     }
-
 
 # Build IP Devices
 def build_ip_devices(topology: Dict):
@@ -64,12 +61,13 @@ def build_ip_devices(topology: Dict):
 
             "assignedBy": "DHCP",
 
-            "leaseStatus": "Active" if d.get("online") else "Expired",
+            "leaseStatus": "Active" if d.get("status") == "active" else ("Idle" if d.get("status") == "idle" else "Offline") ,
 
             "firstSeen": d.get("first_seen"),
             "lastSeen": d.get("last_seen"),
 
             "riskStatus": "",
+            "os": d.get("os"),
 
             "macVendor": d.get("vendor"),
 
