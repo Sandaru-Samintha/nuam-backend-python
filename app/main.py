@@ -68,7 +68,7 @@ async def device_ws(websocket: WebSocket):
 
             data = await websocket.receive_json()
 
-            print("Data Received:", data)
+            # print("Data Received:", data)
 
             # Save event to DB
             processor.process_event(data)
