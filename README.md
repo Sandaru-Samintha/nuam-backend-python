@@ -201,16 +201,5 @@ ws.onmessage = (event) => {
 
 ```
 
----
-
-## Contributors
-| Name | Role | Responsibilities |
-|------|------|------------------|
-| Naveen Hettiwaththa | Fullstack Developer | UI components, pages, UX |
-| Sandaru Samintha | Frontend Developer | API and WebSocket integration |
-| Ravindu Peshan | Fullstack Developer | Testing, API and WebSocket integration |
-| Kaveesha Vihangi | Frontend Developer | Testing, API and WebSocket integration |
----
-
 ## License
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for the full text.
